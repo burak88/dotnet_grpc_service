@@ -1,0 +1,54 @@
+# Build outputs
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+.vs
+# Rider
+.idea/
+*.sln.iml
+
+# Auto-generated files
+*.generated.cs
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# Logs and database files
+*.log
+*.ldf
+*.mdf
+
+# Resharper and StyleCop
+_ReSharper*/
+*.[Rr]e[Ss]harper
+StyleCop.Cache
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Other IDEs and editors
+*.DS_Store
+*.swp
+*.sln.ide
+.ionide/
+
+database/grpcService.db

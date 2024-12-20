@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+option csharp_namespace = "grpcService.Protos";
+import "google/api/annotations.proto";
+
+service Orders{
+    // Create Order
+    rpc CreateOrderAsync(CreateOrderRequest) returns (CreateOrderResponse){
+        option(google.api.http) = {
+            post: "/api/order"
+            body: "*"
+        };
+    }
+
+    // Get Order By Id
+    rpc GetOrderByIdAsync(GetOrderByIdRequest) returns (GetOrderResponse){
+        option(google.api.http) = {
+            get: "/api/order/{id}"
+        };
+    }
+
+    // Get Order
+    rpc GetOrderAsync(GetOrderRequest) returns (GetAllOrderResponse){
+        option(google.api.http) = {
+            get: "/api/order"
+        };
+    }
+
+    // Update Order
+    rpc UpdateOrderAsync(UpdateOrderRequest) returns (UpdateOrderResponse){
+        option(google.api.http) = {
+            put: "/api/order"
+            body: "*"
+        };
+    }
+
+    // Delete Order
+    rpc DeleteOrderAsync(DeleteOrderRequest) returns (DeleteOrderResponse){
+        option(google.api.http) = {
+            delete: "/api/order/{id}"
+        };
+    }
+
+  
+
+}
+
+message CreateOrderRequest {
+    string name = 1;
+    bool enable = 2;
+}
+
+message CreateOrderResponse{
+    string id = 1;
+    string name = 2;
+    bool enable = 3;
+    string created_at = 4;
+}
+
+message GetOrderByIdRequest{
+    string id =1;
+}
+
+message GetOrderResponse{
+    string id = 1;
+    string name = 2;
+    bool enable = 3;
+    string created_at =4;
+}
+   
+message GetOrderRequest{}
+
+message GetAllOrderResponse{
+    repeated GetOrderResponse Order = 1;
+}
+
+message UpdateOrderRequest{
+    string id = 1;
+    string name = 2;
+    bool enable = 3;
+}
+
+message UpdateOrderResponse{
+    string id = 1;
+    string name = 2;
+    bool enable = 3;
+    string created_at = 4;
+}
+
+message DeleteOrderRequest {
+    string id = 1;
+}
+
+message DeleteOrderResponse{
+    string id = 1;
+    string name = 2;
+}
