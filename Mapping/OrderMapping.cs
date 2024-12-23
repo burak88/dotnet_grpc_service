@@ -15,10 +15,7 @@ public class OrderMapping : Profile
         CreateMap<Order, UpdateOrderResponse>();
 
         CreateMap<Order, DeleteOrderResponse>();
-        CreateMap<DeleteOrderResponse, Order>();
 
         CreateMap<Order, GetOrderResponse>();
-        CreateMap<GetOrderResponse, Order>();
-
     }
 }

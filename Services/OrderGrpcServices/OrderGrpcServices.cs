@@ -1,16 +1,17 @@
 using System;
 using AutoMapper;
 using Grpc.Core;
+using grpcService.Contracts;
 using grpcService.Protos;
 
 namespace grpcService.Services.OrderGrpcServices;
 
 public class OrderGrpcServices : Orders.OrdersBase
 {
-    private readonly IOrderService _orderService;
+     private readonly IService<Order> _orderService;
     private readonly IMapper _mapper;
 
-    public OrderGrpcServices(IOrderService orderService, IMapper mapper)
+    public OrderGrpcServices(IService<Order> orderService, IMapper mapper)
     {
         _orderService = orderService;
         _mapper = mapper;
@@ -19,7 +20,7 @@ public class OrderGrpcServices : Orders.OrdersBase
     public override async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request, ServerCallContext context)
     {
         var mapRequestToOrder = _mapper.Map<Order>(request);
-        var res = await _orderService.CreateOrderAsync(mapRequestToOrder);
+        var res = await _orderService.Create(mapRequestToOrder);
         if (res is not null)
         {
             var mapRes = _mapper.Map<CreateOrderResponse>(res);
@@ -31,7 +32,7 @@ public class OrderGrpcServices : Orders.OrdersBase
     public override async Task<UpdateOrderResponse> UpdateOrderAsync(UpdateOrderRequest request, ServerCallContext context)
     {
         var mapRequestToOrder = _mapper.Map<Order>(request);
-        var res = await _orderService.UpdateOrderAsync(mapRequestToOrder);
+        var res = await _orderService.Update(mapRequestToOrder);
         if (res is not null)
         {
             var mapRes = _mapper.Map<UpdateOrderResponse>(res);
@@ -42,13 +43,13 @@ public class OrderGrpcServices : Orders.OrdersBase
 
     public override async Task<DeleteOrderResponse> DeleteOrderAsync(DeleteOrderRequest request, ServerCallContext context)
     {
-        var order = await _orderService.GetOrderByIdAsync(request.Id);
+        var order = await _orderService.GetById(request.Id);
         if (order is null)
         {
             throw new RpcException(new Status(StatusCode.NotFound, "There is no order to delete!"));
         }
 
-        var res = _orderService.DeleteOrderAsync(request.Id);
+        var res = await _orderService.Delete(request.Id);
         if (res == true)
         {
             var mapOrder = _mapper.Map<DeleteOrderResponse>(order);
@@ -60,13 +61,12 @@ public class OrderGrpcServices : Orders.OrdersBase
 
     public override async Task<GetOrderResponse> GetOrderByIdAsync(GetOrderByIdRequest request, ServerCallContext context)
     {
-        var order = await _orderService.GetOrderByIdAsync(request.Id);
-        if (order is not null)
+        var Order = await _orderService.GetById(request.Id);
+        if (Order is not null)
         {
-            var response = _mapper.Map<GetOrderResponse>(order);
-            return await Task.FromResult(response);
+            var mapOrder = _mapper.Map<GetOrderResponse>(Order);
+            return await Task.FromResult(mapOrder);
         }
-
         throw new RpcException(new Status(StatusCode.NotFound, "Order not found"));
     }
 
@@ -74,7 +74,7 @@ public class OrderGrpcServices : Orders.OrdersBase
     {
         var response = new GetAllOrderResponse();
 
-        var list = await _orderService.GetOrdersAsync();
+        var list = await _orderService.GetAll();
         foreach (var item in list)
         {
             var mapModel = _mapper.Map<GetOrderResponse>(item);

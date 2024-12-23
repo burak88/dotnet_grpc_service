@@ -1,6 +1,7 @@
 using System.Reflection;
-using grpcService.Mapping;
+using grpcService.Contracts;
 using grpcService.Models;
+using grpcService.Repositories;
 using grpcService.Services;
 using grpcService.Services.OrderGrpcServices;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,12 @@ var connectionString = $"Data Source={Path.Combine(dbFolderPath, "grpcService.db
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 
 // Register Order Service
-builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IRepository<Order>, RepositoryOrder>();
+builder.Services.AddScoped<IService<Order>, OrderService>();
+
 
 //Register AutoMapper
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-// builder.Services.AddAutoMapper(typeof(OrderMapping));
-
 
 // Add services to the container.
 builder.Services.AddGrpc().AddJsonTranscoding();

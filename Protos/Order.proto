@@ -41,8 +41,6 @@ service Orders{
         };
     }
 
-  
-
 }
 
 message CreateOrderRequest {
